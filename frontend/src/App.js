@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Blog from "./components/Blog";
 import LoginForm from "./components/LoginForm";
 import blogService from "./services/blogs";
 import userUtils from "./utils/user";
 import Notification from "./components/Notification";
 import BlogForm from "./components/BlogForm";
+import Togglable from "./components/Togglable";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -14,6 +15,7 @@ const App = () => {
     message: "",
     warning: false,
   });
+  const blogFormRef = useRef();
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -28,6 +30,17 @@ const App = () => {
 
   const addNewBlog = (newBlog) => {
     setBlogs(blogs.concat(newBlog));
+    blogFormRef.current.toggleVisibility();
+  };
+
+  const removeBlog = async (blog) => {
+    const result = window.confirm(
+      `Remove blog ${blog.title} by ${blog.author}`
+    );
+    if (result) {
+      await blogService.deleteBlog(blog.id);
+      setBlogs(blogs.filter((b) => b.id !== blog.id));
+    }
   };
 
   const showNotificationMessage = (message, warning) => {
@@ -70,10 +83,16 @@ const App = () => {
             <button onClick={handleLogout}>logout</button>
           </div>
           <br />
-          <BlogForm
-            handleNewBlog={addNewBlog}
-            handleNotification={showNotificationMessage}
-          />
+          <Togglable
+            openButtonLabel="new blog"
+            closeButtonLabel="cancel"
+            ref={blogFormRef}
+          >
+            <BlogForm
+              handleNewBlog={addNewBlog}
+              handleNotification={showNotificationMessage}
+            />
+          </Togglable>
           {notificationMessage.show && (
             <Notification
               message={notificationMessage.message}
@@ -81,9 +100,11 @@ const App = () => {
             />
           )}
           <br />
-          {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} />
-          ))}
+          {blogs
+            .sort((a, b) => b.likes - a.likes)
+            .map((blog) => (
+              <Blog key={blog.id} blog={blog} handleDelete={removeBlog} />
+            ))}
         </>
       )}
     </div>

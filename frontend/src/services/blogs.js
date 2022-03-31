@@ -19,9 +19,28 @@ const create = async (newBlog) => {
   return response.data;
 };
 
+const update = async (id, newBlog) => {
+  const response = await axios.put(`${baseUrl}/${id}`, newBlog);
+  return response.data;
+};
+
+const deleteBlog = async (id) => {
+  const token = userUtils.getTokenFromLocalStorage();
+  if (!token) return null;
+
+  const config = {
+    headers: { Authorization: `bearer ${token}` },
+  };
+
+  const response = await axios.delete(`${baseUrl}/${id}`, config);
+  return response.data;
+};
+
 const blogService = {
   getAll,
   create,
+  update,
+  deleteBlog,
 };
 
 export default blogService;
