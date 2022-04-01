@@ -16,7 +16,7 @@ const BlogForm = ({ handleNewBlog, handleNotification }) => {
         url,
       })
       handleNewBlog(blog)
-      handleNotification(`a new blog ${blog.title} by ${blog.author}`, false)
+      handleNotification(`a new blog ${blog?.title} by ${blog?.author}`, false)
       setTitle('')
       setAuthor('')
       setUrl('')
@@ -33,6 +33,7 @@ const BlogForm = ({ handleNewBlog, handleNotification }) => {
         <div>
           title:
           <input
+            id="title"
             type="text"
             value={title}
             name="Title"
@@ -42,6 +43,7 @@ const BlogForm = ({ handleNewBlog, handleNotification }) => {
         <div>
           author:
           <input
+            id="author"
             type="text"
             value={author}
             name="Author"
@@ -51,6 +53,7 @@ const BlogForm = ({ handleNewBlog, handleNotification }) => {
         <div>
           url:
           <input
+            id="url"
             type="text"
             value={url}
             name="Url"

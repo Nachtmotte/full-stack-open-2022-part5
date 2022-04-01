@@ -1,62 +1,56 @@
-import React, { useState } from 'react'
-import blogService from '../services/blogs'
-import userUtils from '../utils/user'
-import PropTypes from 'prop-types'
+import React, { useState } from "react";
+import userUtils from "../utils/user";
+import PropTypes from "prop-types";
 
-const Blog = (props) => {
-  const [showDetails, setShowDetails] = useState(false)
-  const [viewBlog, setViewBlog] = useState(props.blog)
+const Blog = ({ blog, handleDelete, handleUpdate }) => {
+  const [showDetails, setShowDetails] = useState(false);
   const isOwnerBlog =
-    userUtils.getUserFromLocalStorage()?.username === viewBlog.user.username
+    userUtils.getUserFromLocalStorage()?.username === blog.user.username;
 
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
-    border: 'solid',
+    border: "solid",
     borderWidth: 1,
     marginBottom: 5,
-  }
+  };
 
-  const handleLike = async (blog) => {
-    const updatedBlog = await blogService.update(blog.id, {
-      title: blog.title,
-      url: blog.url,
-      author: blog.author,
-      likes: blog.likes + 1,
-    })
-    setViewBlog(updatedBlog)
-  }
+  const handleLike = async (b) => {
+    b.likes += 1;
+    handleUpdate(b);
+  };
 
   return (
     <div style={blogStyle}>
       <div>
-        {viewBlog.title}
+        {blog.title}
         <button onClick={() => setShowDetails(!showDetails)}>
-          {!showDetails ? 'view' : 'hide'}
+          {!showDetails ? "view" : "hide"}
         </button>
       </div>
       {showDetails && (
         <>
-          <div>{viewBlog.url}</div>
+          <div>{blog.url}</div>
           <div>
-            likes: {viewBlog.likes}{' '}
-            <button onClick={() => handleLike(viewBlog)}>like</button>
+            likes: {blog.likes}{" "}
+            <button onClick={() => handleLike(blog)}>like</button>
           </div>
-          <div>{viewBlog.author}</div>
+          <div>{blog.author}</div>
           {isOwnerBlog ? (
-            <button onClick={() => props.handleDelete(viewBlog)}>remove</button>
+            <button onClick={() => handleDelete(blog)}>remove</button>
           ) : (
             <></>
           )}
         </>
       )}
     </div>
-  )
-}
+  );
+};
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
   handleDelete: PropTypes.func.isRequired,
-}
+  handleUpdate: PropTypes.func.isRequired,
+};
 
-export default Blog
+export default Blog;

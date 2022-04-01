@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import Blog from "./components/Blog";
 import LoginForm from "./components/LoginForm";
 import blogService from "./services/blogs";
 import userUtils from "./utils/user";
 import Notification from "./components/Notification";
 import BlogForm from "./components/BlogForm";
 import Togglable from "./components/Togglable";
+import Blogs from "./components/Blogs";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -31,16 +31,6 @@ const App = () => {
   const addNewBlog = (newBlog) => {
     setBlogs(blogs.concat(newBlog));
     blogFormRef.current.toggleVisibility();
-  };
-
-  const removeBlog = async (blog) => {
-    const result = window.confirm(
-      `Remove blog ${blog.title} by ${blog.author}`
-    );
-    if (result) {
-      await blogService.deleteBlog(blog.id);
-      setBlogs(blogs.filter((b) => b.id !== blog.id));
-    }
   };
 
   const showNotificationMessage = (message, warning) => {
@@ -100,11 +90,7 @@ const App = () => {
             />
           )}
           <br />
-          {blogs
-            .sort((a, b) => b.likes - a.likes)
-            .map((blog) => (
-              <Blog key={blog.id} blog={blog} handleDelete={removeBlog} />
-            ))}
+          <Blogs blogs={blogs} />
         </>
       )}
     </div>
