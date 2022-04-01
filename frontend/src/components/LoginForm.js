@@ -1,23 +1,24 @@
-import { useState } from "react";
-import loginService from "../services/login";
+import React, { useState } from 'react'
+import loginService from '../services/login'
+import PropTypes from 'prop-types'
 
 const LoginForm = ({ handleUser, handleNotification }) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
   const handleLogin = async (event) => {
-    event.preventDefault();
+    event.preventDefault()
     try {
       const user = await loginService.login({
         username,
         password,
-      });
-      window.localStorage.setItem("loggedUser", JSON.stringify(user));
-      handleUser(user);
+      })
+      window.localStorage.setItem('loggedUser', JSON.stringify(user))
+      handleUser(user)
     } catch (exception) {
-      handleNotification("Wrong credentials", true);
+      handleNotification('Wrong credentials', true)
     }
-  };
+  }
 
   return (
     <div>
@@ -44,7 +45,12 @@ const LoginForm = ({ handleUser, handleNotification }) => {
         <button type="submit">login</button>
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default LoginForm;
+LoginForm.propTypes = {
+  handleUser: PropTypes.func.isRequired,
+  handleNotification: PropTypes.func.isRequired,
+}
+
+export default LoginForm

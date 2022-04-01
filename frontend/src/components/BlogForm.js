@@ -1,29 +1,30 @@
-import { useState } from "react";
-import blogService from "../services/blogs";
+import React, { useState } from 'react'
+import blogService from '../services/blogs'
+import PropTypes from 'prop-types'
 
 const BlogForm = ({ handleNewBlog, handleNotification }) => {
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [url, setUrl] = useState("");
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
   const handleAdd = async (event) => {
-    event.preventDefault();
+    event.preventDefault()
     try {
       const blog = await blogService.create({
         title,
         author,
         url,
-      });
-      handleNewBlog(blog);
-      handleNotification(`a new blog ${blog.title} by ${blog.author}`, false);
-      setTitle("");
-      setAuthor("");
-      setUrl("");
+      })
+      handleNewBlog(blog)
+      handleNotification(`a new blog ${blog.title} by ${blog.author}`, false)
+      setTitle('')
+      setAuthor('')
+      setUrl('')
     } catch (exception) {
-      console.log(exception);
-      handleNotification("problems creating a new blog", true);
+      console.log(exception)
+      handleNotification('problems creating a new blog', true)
     }
-  };
+  }
 
   return (
     <div>
@@ -59,7 +60,12 @@ const BlogForm = ({ handleNewBlog, handleNotification }) => {
         <button type="submit">create</button>
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default BlogForm;
+BlogForm.propTypes = {
+  handleNewBlog: PropTypes.func.isRequired,
+  handleNotification: PropTypes.func.isRequired,
+}
+
+export default BlogForm
