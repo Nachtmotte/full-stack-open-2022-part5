@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 const Blog = ({ blog, handleDelete, handleUpdate }) => {
   const [showDetails, setShowDetails] = useState(false);
   const isOwnerBlog =
-    userUtils.getUserFromLocalStorage()?.username === blog.user.username;
+    userUtils.getUserFromLocalStorage()?.username === blog?.user?.username;
 
   const blogStyle = {
     paddingTop: 10,
